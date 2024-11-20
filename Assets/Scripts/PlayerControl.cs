@@ -14,6 +14,10 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] private GameObject projectile;
     [SerializeField] private Transform bulletSpawn;
 
+    [Header("Particles")]
+    public ParticleSystem mainThruster;
+    public ParticleSystem rightThruster;
+    public ParticleSystem leftThruster;
 
     //Components
     private Rigidbody rb;
@@ -30,9 +34,31 @@ public class PlayerControl : MonoBehaviour
     {
         horizontalInput = Input.GetAxis("Horizontal");
         transform.Rotate(Vector3.up * turnSpeed * Time.deltaTime * horizontalInput);
+        if(horizontalInput > 0)
+        {
+            rightThruster.Stop();
+            if(!leftThruster.isPlaying)
+            {
+                leftThruster.Play();
+            }
+        }
+
+         else if (horizontalInput < 0)
+        {
+            leftThruster.Stop();
+            if (!rightThruster.isPlaying)
+            {
+                rightThruster.Play();
+            }
+        }
+        else
+        {
+            leftThruster.Stop();
+            rightThruster.Stop();
+        }
 
         //Shooting
-        if(Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             Instantiate(projectile, bulletSpawn.position, bulletSpawn.rotation);
         }
@@ -41,7 +67,18 @@ public class PlayerControl : MonoBehaviour
     private void FixedUpdate()
     {
         verticalInput = Input.GetAxis("Vertical");
-        rb.AddRelativeForce(Vector3.forward * verticalInput * thrustForce);
+        if (verticalInput > 0)
+        {
+            rb.AddRelativeForce(Vector3.forward * verticalInput * thrustForce);
+            if(!mainThruster.isPlaying)
+            {
+                mainThruster.Play();
+            }
+        }
+        else
+        {
+            mainThruster.Stop();
+        }
 
     }
 }
