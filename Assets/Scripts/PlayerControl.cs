@@ -10,6 +10,10 @@ public class PlayerControl : MonoBehaviour
     private float verticalInput;
     [SerializeField] private float thrustForce;
 
+    [Header("Shooting")]
+    [SerializeField] private GameObject projectile;
+    [SerializeField] private Transform bulletSpawn;
+
 
     //Components
     private Rigidbody rb;
@@ -26,6 +30,12 @@ public class PlayerControl : MonoBehaviour
     {
         horizontalInput = Input.GetAxis("Horizontal");
         transform.Rotate(Vector3.up * turnSpeed * Time.deltaTime * horizontalInput);
+
+        //Shooting
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            Instantiate(projectile, bulletSpawn.position, bulletSpawn.rotation);
+        }
     }
 
     private void FixedUpdate()
